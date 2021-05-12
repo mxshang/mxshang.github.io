@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>学习笔记Day1 — ES6</title>
+    <url>/2021/05/11/ES6/</url>
+    <content><![CDATA[<blockquote><p>日常的学习笔记，包括 ES6、Promise、Node.js、Webpack、http 原理和 Vue 源码等等，后续可能还会继续更新 JS 基础和常见的面试题等等。</p>
+</blockquote>
+
+<h2 id="let、const-和-var-的区别"><a href="#let、const-和-var-的区别" class="headerlink" title="let、const 和 var 的区别"></a>let、const 和 var 的区别</h2><p>let、const 和 var 都是用来定义变量的，那它们有什么区别呢？</p>
+<h3 id="var-的特点"><a href="#var-的特点" class="headerlink" title="var 的特点"></a>var 的特点</h3><ol>
+<li>对<strong>全局变量</strong>造成污染</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.a); <span class="comment">//1</span></span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<ol start="2">
+<li>存在<strong>变量提升</strong>机制</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(name); <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">var</span> name = <span class="string">"a"</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>var 可以被<strong>重复声明</strong></li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">var</span> a = <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>var 的作用域只有<strong>全局作用域</strong>和<strong>函数作用域</strong></li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="let-的特点"><a href="#let-的特点" class="headerlink" title="let 的特点"></a>let 的特点</h3><ol>
+<li>不可以被重复声明</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">let</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">let</span> a = <span class="number">3</span>;</span><br><span class="line"><span class="comment">// Identifier 'a' has already been declared</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>存在块级作用域</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i); <span class="comment">// 0 1 2 ... 8 9</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em>如果使用 var 进行定义，则会全部输出 10</em></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i); <span class="comment">// 10</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>暂时性死区</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span>;</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(a); <span class="comment">// Cannot access 'a' before initialization</span></span><br><span class="line">  <span class="keyword">let</span> a = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em>因为 ES6 在定义变量的时候，会把同名的变量定义为两个变量（如<strong>下图</strong> 所示）</em></p>
+<p><img src="/images/day1/pic1.png" alt="@图1 (图片截取自Babel)"></p>
+<h3 id="const-的特点"><a href="#const-的特点" class="headerlink" title="const 的特点"></a>const 的特点</h3><p>const 是<strong>不可变的量</strong>，也就是<strong>常量</strong>。</p>
+<ol>
+<li>const 定义的变量不可以对其值进行修改。</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> PI = <span class="number">3.14</span>;</span><br><span class="line">PI = <span class="number">3.15</span>; <span class="comment">// Assignment to constant variable.</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>const 可以修改同一地址（堆内存）中的值。</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> a = &#123; <span class="attr">b</span>: <span class="number">1</span> &#125;;</span><br><span class="line">a.b = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">// &#123;b: 2&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="解构赋值"><a href="#解构赋值" class="headerlink" title="解构赋值"></a>解构赋值</h2><h3 id="…-扩展运算符"><a href="#…-扩展运算符" class="headerlink" title="… 扩展运算符"></a>… 扩展运算符</h3><p><strong>扩展运算符</strong>，又叫<strong>展开运算符</strong>。可以用来将<em>两个数组合并成一个数组</em>，或者将<em>两个对象合并成一个对象</em>。（如<strong><em>下图</em></strong> 所示）<br><img src="/images/day1/pic2.png" alt="@图2"></p>
+<h4 id="深拷贝和浅拷贝"><a href="#深拷贝和浅拷贝" class="headerlink" title="深拷贝和浅拷贝"></a>深拷贝和浅拷贝</h4><p><strong>深拷贝</strong>：拷贝后与原数组无关，会使 拷贝后的数组 在堆中指向一个新的内存空间。<br><strong>浅拷贝</strong>：拷贝后与原数组有关，新数组 与 原数组 指向同一个堆内存。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> school = &#123; <span class="attr">name</span>: <span class="string">"ygbx"</span> &#125;;</span><br><span class="line"><span class="keyword">let</span> my = &#123; <span class="attr">age</span>: &#123; <span class="attr">count</span>: <span class="number">18</span> &#125; &#125;;</span><br><span class="line"><span class="keyword">let</span> all = &#123; ...school, ...my &#125;;</span><br><span class="line">my.age.count = <span class="number">100</span>;</span><br><span class="line"><span class="built_in">console</span>.log(all); <span class="comment">// &#123;&#123;name: "ygbx", age: &#123;count: 100&#125;&#125;&#125;</span></span><br><span class="line"><span class="built_in">console</span>.log(my); <span class="comment">// &#123;age: &#123;count: 100&#125;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="未完待续…"><a href="#未完待续…" class="headerlink" title="未完待续…"></a>未完待续…</h2>]]></content>
+      <categories>
+        <category>日常笔记</category>
+      </categories>
+      <tags>
+        <tag>面试</tag>
+        <tag>ES6</tag>
+        <tag>JS基础</tag>
+      </tags>
+  </entry>
+</search>
