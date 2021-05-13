@@ -15,10 +15,9 @@
 }
 .need-share-button-opened img.need-share-wechat-code-image {
   display: block;
-
   width: 100%;
-  max-width: 200px;
-  margin: auto;
+  max-width: 150px;
+  margin: 5px auto;
 }
 .need-share-button_dropdown {
   position: absolute;
