@@ -2,23 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://mxshang.github.io/2021/06/18/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80%E4%B9%8BES6%E7%9A%84%E6%95%B0%E7%BB%84/</loc>
+    <loc>https://mxshang.github.io/2021/06/18/%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%8E%E7%B1%BB/</loc>
     
-    <lastmod>2021-06-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://mxshang.github.io/2021/05/28/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80%E4%B9%8BES6-2/</loc>
-    
-    <lastmod>2021-06-09</lastmod>
+    <lastmod>2021-06-21</lastmod>
     
   </url>
   
   <url>
-    <loc>https://mxshang.github.io/2021/05/10/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80%E4%B9%8BES6-1/</loc>
+    <loc>https://mxshang.github.io/2021/06/18/%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80%E4%B9%8BES6%E7%9A%84%E6%95%B0%E7%BB%84/</loc>
     
-    <lastmod>2021-06-07</lastmod>
+    <lastmod>2021-06-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mxshang.github.io/2021/05/28/%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80%E4%B9%8BES6-2/</loc>
+    
+    <lastmod>2021-06-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mxshang.github.io/2021/05/10/%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80%E4%B9%8BES6-1/</loc>
+    
+    <lastmod>2021-06-21</lastmod>
     
   </url>
   
@@ -46,7 +53,7 @@
 
   <url>
     <loc>https://mxshang.github.io/</loc>
-    <lastmod>2021-06-18</lastmod>
+    <lastmod>2021-06-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -54,21 +61,21 @@
   
   <url>
     <loc>https://mxshang.github.io/tags/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/</loc>
-    <lastmod>2021-06-18</lastmod>
+    <lastmod>2021-06-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://mxshang.github.io/tags/ES6/</loc>
-    <lastmod>2021-06-18</lastmod>
+    <lastmod>2021-06-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/</loc>
-    <lastmod>2021-06-18</lastmod>
+    <lastmod>2021-06-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -77,7 +84,7 @@
   
   <url>
     <loc>https://mxshang.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2021-06-18</lastmod>
+    <lastmod>2021-06-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
