@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://mxshang.github.io/2021/11/02/Node/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</loc>
+    
+    <lastmod>2021-11-02</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://mxshang.github.io/2021/10/30/Promise/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94EventLoop%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/</loc>
     
     <lastmod>2021-11-01</lastmod>
@@ -88,7 +95,7 @@
 
   <url>
     <loc>https://mxshang.github.io/</loc>
-    <lastmod>2021-11-01</lastmod>
+    <lastmod>2021-11-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -96,28 +103,35 @@
   
   <url>
     <loc>https://mxshang.github.io/tags/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/</loc>
-    <lastmod>2021-11-01</lastmod>
+    <lastmod>2021-11-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mxshang.github.io/tags/Promise/</loc>
-    <lastmod>2021-11-01</lastmod>
+    <loc>https://mxshang.github.io/tags/Node/</loc>
+    <lastmod>2021-11-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/</loc>
-    <lastmod>2021-11-01</lastmod>
+    <lastmod>2021-11-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mxshang.github.io/tags/Promise/</loc>
+    <lastmod>2021-11-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://mxshang.github.io/tags/ES6/</loc>
-    <lastmod>2021-11-01</lastmod>
+    <lastmod>2021-11-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -126,7 +140,7 @@
   
   <url>
     <loc>https://mxshang.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2021-11-01</lastmod>
+    <lastmod>2021-11-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
