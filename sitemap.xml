@@ -109,20 +109,6 @@
   </url>
   
   <url>
-    <loc>https://mxshang.github.io/tags/Node/</loc>
-    <lastmod>2021-11-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mxshang.github.io/tags/JS%E8%BF%9B%E9%98%B6/</loc>
-    <lastmod>2021-11-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://mxshang.github.io/tags/Promise/</loc>
     <lastmod>2021-11-04</lastmod>
     <changefreq>daily</changefreq>
@@ -131,6 +117,20 @@
   
   <url>
     <loc>https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/</loc>
+    <lastmod>2021-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mxshang.github.io/tags/Node/</loc>
+    <lastmod>2021-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mxshang.github.io/tags/JS%E8%BF%9B%E9%98%B6/</loc>
     <lastmod>2021-11-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
