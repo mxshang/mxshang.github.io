@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>学习笔记—Node中的EventLoop</title>
+    <url>/2021/11/14/Node/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E7%9A%84EventLoop/</url>
+    <content><![CDATA[<blockquote><p>日常的学习笔记，包括 ES6、Promise、Node.js、Webpack、http 原理、Vue全家桶，后续可能还会继续更新 Typescript、Vue3 和 常见的面试题 等等。</p></blockquote><hr><h2 id="nextTick"><a href="#nextTick" class="headerlink" title="nextTick"></a>nextTick</h2><blockquote><p>参考文献 <span class="exturl" data-url="aHR0cDovL3d3dy5ydWFueWlmZW5nLmNvbS9ibG9nLzIwMTQvMTAvZXZlbnQtbG9vcC5odG1s">JavaScript运行机制详解<i class="fa fa-external-link-alt"></i></span></p></blockquote><p>首先，<code>process.nextTick</code>是node自己实现的方法，并<strong>不属于node中的EventLoop</strong>，他的<strong>优先级也比promise更高</strong>。</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'promise'</span>);</span><br><span class="line">&#125;)</span><br><span class="line">process.nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'nextTick'</span>);</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// nextTick</span></span><br><span class="line"><span class="comment">// promise</span></span><br></pre></td></tr></table></figure><p>我们可以看到，上述执行队列中，会<em>先输出nextTick，再输出promise</em>。</p><p>原因就是因为nextTick的执行位置，他会<strong>在执行上下文栈执行完毕后，立即执行nextTick</strong>。</p><p><img data-src="pic4.png" alt="node中的nextTick"></p><h2 id="Node中的EventLoop"><a href="#Node中的EventLoop" class="headerlink" title="Node中的EventLoop"></a>Node中的EventLoop</h2><blockquote><p>参考文献 <span class="exturl" data-url="aHR0cHM6Ly9ub2RlanMub3JnL3poLWNuL2RvY3MvZ3VpZGVzL2V2ZW50LWxvb3AtdGltZXJzLWFuZC1uZXh0dGljay8=">Node.js事件循环、定时器和process.nextTick()<i class="fa fa-external-link-alt"></i></span></p></blockquote><p>为了更好的学习和理解EventLoop与nextTick的关系，我们也可以参考下图。</p><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">    本阶段执行已经被 setTimeout() 和 setInterval() 的调度回调函数。</span><br><span class="line">   ┌───────────────────────────┐</span><br><span class="line">┌─&gt;│           timers          │ </span><br><span class="line">│  └─────────────┬─────────────┘</span><br><span class="line">|   执行延迟到下一个循环迭代的 I&#x2F;O 回调。</span><br><span class="line">│  ┌─────────────┴─────────────┐</span><br><span class="line">│  │     pending callbacks     │</span><br><span class="line">│  └─────────────┬─────────────┘</span><br><span class="line">|   仅系统内部使用。</span><br><span class="line">│  ┌─────────────┴─────────────┐</span><br><span class="line">│  │       idle, prepare       │</span><br><span class="line">│  └─────────────┬─────────────┘      </span><br><span class="line">|   检索新的I&#x2F;O事件;执行与 I&#x2F;O 相关的回调  ┌───────────────┐</span><br><span class="line">│  ┌─────────────┴─────────────┐      │   incoming:   │</span><br><span class="line">│  │           poll            │&lt;─────┤  connections, │</span><br><span class="line">│  └─────────────┬─────────────┘      │   data, etc.  │</span><br><span class="line">│   setImmediate() 回调函数在这里执行。  └───────────────┘</span><br><span class="line">│  ┌─────────────┴─────────────┐      </span><br><span class="line">│  │           check           │</span><br><span class="line">│  └─────────────┬─────────────┘</span><br><span class="line">|  一些关闭的回调函数</span><br><span class="line">│  ┌─────────────┴─────────────┐</span><br><span class="line">└──┤      close callbacks      │  </span><br><span class="line">   └───────────────────────────┘</span><br></pre></td></tr></table></figure><p>这里每一个阶段都对应一个事件队列，当 event loop 执行到某个阶段时会将当前阶段对应的队列依次执行。当该队列已用尽或达到回调限制，事件循环将移动到下一阶段。</p><p>我们可以通过以下代码来感受一下上述概念。</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'timeout'</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">setImmediate(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'setImmediate'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// timeout</span></span><br><span class="line"><span class="comment">// setImmediate</span></span><br></pre></td></tr></table></figure><p>这里我们可以发现，<em>timeout</em> 会在 <em>setImmediate</em> 之前输出。</p><p>但是这里会有一个问题，多次执行之后我们会发现，<em>timeout</em> 也会在 <em>setImmediate</em> 之后输出。</p><p>原因是因为当前默认<strong>执行主栈代码</strong>，主栈代码执行完毕后，<strong>再去执行宏任务队列</strong>。但是因为我们的<strong>定时器设定</strong>的时间是0，可能会<strong>有几毫秒的延迟</strong>，所以当主栈代码执行完毕后，定时器并<strong>没有到达指定的执行时间</strong>，所以会存在两个结果输出情况不一致的情况。</p><p>我们可以称他为 <strong><em>准备阶段时间</em></strong>。</p><p>假设我们目前存在这样一段代码，从I/O事件中执行<em>setImmediate</em> 与 <em>setTimeout</em>。</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">fs.readFile(<span class="string">'./test.txt'</span>, <span class="string">'utf-8'</span>, () =&gt; &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'timeout'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    setImmediate(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'setImmediate'</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//setImmediate</span></span><br><span class="line"><span class="comment">//timeout</span></span><br></pre></td></tr></table></figure><p>我们的代码在执行时，会先检测是否存在 <strong><em>timer</em>阶段</strong>，也就是定时器。没有的话，会去检测 <strong><em>poll</em>队列</strong>（I/O事件）是否为空。检测完毕后，再去检测是否存在 setImmediate，也就是 <strong><em>check</em>阶段</strong> 。检测完毕后，会进行轮询，也就是下一轮检测。</p><p>这样我们可以<strong>总结一下</strong>：</p><ol><li>检测Poll队列中是否为空，如果不为空则执行队列中的任务，直到超时或者全部执行完毕。</li><li>执行完毕后检测setImmediate队列是否为空，如果不为空则执行check阶段，如果为空则等待时间到达。时间到达后回到timer阶段。</li><li>等待时间到达是可能会出现新的callback，此时也在当前阶段被清空。</li></ol><h3 id="面试题"><a href="#面试题" class="headerlink" title="面试题"></a>面试题</h3><p>搞清楚了Node中的EventLoop，那么EventLoop和微任务的关系又是什么样的呢？</p><p>我们可以看一道曾经腾讯的面试题</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'a'</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line">setImmediate(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'b'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'c'</span>);</span><br><span class="line">    resolve()</span><br><span class="line">&#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'d'</span>);</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'e'</span>);</span><br><span class="line"><span class="comment">// c e d a b</span></span><br></pre></td></tr></table></figure><p>根据我们之前学过的知识我们可以推导出这道题的结果。</p><p>Node在执行时，会先将主执行栈代码执行完毕，这时<em>输出结果 c 、e<em>，将</em>promise.then()放入微任务队列<em>。然后会拿出一个宏任务并执行，先清空微任务队列，这时 *输出结果 d</em>。随后再执行定时器回调，*输出结果 a</em> 。然后根据Node中EventLoop的执行顺序，timer清空完毕后进入poll阶段，检查是否存在I/O事件。随后检测setImmediate队列，并将 <em>输出结果 b</em>。</p><hr><blockquote><p>本篇文章由<strong>莫小尚</strong>创作，文章中如有任何问题和纰漏，欢迎您的指正与交流。<br>您也可以关注我的 <a href="https://mxshang.github.io">个人站点</a>、<span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vbW94aWFvc2hhbmcv">博客园<i class="fa fa-external-link-alt"></i></span> 和 <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vdXNlci8xNTkxNzQ4NTY3NzYyNzc2">掘金<i class="fa fa-external-link-alt"></i></span>，我会在文章产出后同步上传到这些平台上。<br>最后感谢您的支持！</p></blockquote>]]></content>
+      <categories>
+        <category>学习笔记</category>
+      </categories>
+      <tags>
+        <tag>知识点汇总</tag>
+        <tag>Node</tag>
+        <tag>JS进阶</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>学习笔记—Node的全局对象</title>
     <url>/2021/11/05/Node/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E7%9A%84%E5%85%A8%E5%B1%80%E5%AF%B9%E8%B1%A1/</url>
     <content><![CDATA[<blockquote><p>日常的学习笔记，包括 ES6、Promise、Node.js、Webpack、http 原理、Vue全家桶，后续可能还会继续更新 Typescript、Vue3 和 常见的面试题 等等。</p></blockquote><hr><h2 id="Node中的全局对象"><a href="#Node中的全局对象" class="headerlink" title="Node中的全局对象"></a>Node中的全局对象</h2><blockquote><p>参考官网 <span class="exturl" data-url="aHR0cHM6Ly9ub2RlanMub3JnL3poLWNuL2RvY3Mv">Node.js官网<i class="fa fa-external-link-alt"></i></span></p></blockquote><p>首先我们先要清楚一个概念。一个默认执行的js文件，使用node来执行他会把这个文件当成一个模块来执行。</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// &#123;&#125;</span></span><br></pre></td></tr></table></figure><p>this是一个空对象，模块会默认将this给进行修改。</p><p>在前端（html）中，访问变量是通过<strong>window</strong>属性。而在后端（node）中，访问变量是通过<strong>global</strong>属性。</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 在node环境下运行</span></span><br><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.dir(<span class="keyword">this</span>); <span class="comment">// global</span></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure><p>我们可以在控制台中，查看打印出来的结果。</p><p><img data-src="pic3.png" alt="global"></p><p>其中有很多我们经常用到的方法，例如<em>setTimeout</em>、<em>clearTimeout</em>、<em>setInterval</em>、<em>clearInterval</em>、setImmediate、<em>clearImmediate</em>等等。</p><p><em>（我们可以使用 <code>console.dir(this, {showHidden: true})</code> 查看隐藏属性，更全面的观察global。）</em></p><h3 id="Buffer"><a href="#Buffer" class="headerlink" title="Buffer"></a>Buffer</h3><p>JavaScript 语言自身只有字符串数据类型，没有二进制数据类型。</p><p>但在处理像TCP流或文件流时，必须使用到二进制数据。因此在 Node.js中，定义了一个 Buffer 类，该类用来创建一个<strong>专门存放二进制数据的缓存区</strong>。</p><p><em>（后期会有博客对此进行详细说明）</em></p><h3 id="dirname-filename"><a href="#dirname-filename" class="headerlink" title="__dirname / __filename"></a><strong>__dirname</strong> / <strong>__filename</strong></h3><ul><li><strong>__dirname</strong> ：表示当前文件执行时的 <em>固定目录</em> ，也就是目录的绝对路径。</li><li><strong>__filename</strong> ：表示当前文件自己执行位置的 绝对路径。</li></ul><p>使用 <strong>__dirname</strong> 和 <strong>__filename</strong> 的路径，是准确的绝对路径。</p><h3 id="process"><a href="#process" class="headerlink" title="process"></a>process</h3><blockquote><p>参考官网 <span class="exturl" data-url="aHR0cHM6Ly9ub2RlanMub3JnL2FwaS9wcm9jZXNzLmh0bWw=">process<i class="fa fa-external-link-alt"></i></span></p></blockquote><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(process);</span><br></pre></td></tr></table></figure><h4 id="platform"><a href="#platform" class="headerlink" title="platform"></a>platform</h4><p>表示<strong>当前运行的平台</strong>（win、mac 等等）</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(process.platform); <span class="comment">// win32</span></span><br></pre></td></tr></table></figure><p><em>win32表示我当前运行的平台是 windows，而 mac的输出结果是 darwin。</em></p><p>我们可以根据其输出结果的不同，做不同的命令配置。</p><h4 id="chdir"><a href="#chdir" class="headerlink" title="chdir"></a>chdir</h4><p><code>change directory</code>，<strong>修改当前文件运行目录</strong>。</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 修改前文件位置 d:\****\****\test\demo</span></span><br><span class="line">process.chdir(<span class="string">'../'</span>)</span><br><span class="line"><span class="comment">// 修改后文件位置 d:\****\****\test</span></span><br></pre></td></tr></table></figure><p><em>此方法我们很少会应用到。</em></p><h4 id="cwd"><a href="#cwd" class="headerlink" title="cwd"></a>cwd</h4><p><code>current working directory</code>的缩写，表示<strong>当前工作目录</strong>。</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(process.cwd()); <span class="comment">// d:\****\****\test\demo</span></span><br></pre></td></tr></table></figure><p>当前文件运行在哪个目录中，他就会显示哪个目录。</p><p>假设我们换一下运行此文件的目录（如在上级目录运行此文件），那结果就会显示运行文件的位置。</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(process.cwd()); <span class="comment">// d:\****\****\test</span></span><br></pre></td></tr></table></figure><p>在webpack中，<em>webpack会使用此方法自动查找并运行目录下的webpack.config.js文件</em>。</p><h4 id="env"><a href="#env" class="headerlink" title="env"></a>env</h4><p>表示当前的<strong>环境变量</strong>，而环境变量分为 <em>用户变量</em> 和 <em>系统变量</em> 。</p><p>在实际场景中，我们可以通过此变量来判断当前的运行环境（<em>生产环境、开发环境 和 测试环境 等等</em>）</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (process.env.NODE_ENV === <span class="string">"dev"</span>) &#123;</span><br><span class="line">    <span class="comment">// 开发环境</span></span><br><span class="line">    <span class="comment">// do something ... </span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 生产环境</span></span><br><span class="line">    <span class="comment">// do something ... </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>（<em>因目前Node各版本设置process.env的差异，在此不做配置环境变量的演示了，配置方法以 <span class="exturl" data-url="aHR0cHM6Ly9ub2RlanMub3JnL2RvY3MvbGF0ZXN0LXYxNC54L2FwaS9wcm9jZXNzLmh0bWwjcHJvY2Vzc19wcm9jZXNzX2Vudg==">process.env官网<i class="fa fa-external-link-alt"></i></span> 为准</em>）</p><h4 id="argv"><a href="#argv" class="headerlink" title="argv"></a>argv</h4><p>表示启动时<strong>传入的命令行参数</strong>。</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(process.argv); </span><br><span class="line"><span class="comment">// ['C:\\Program Files\\nodejs\\node.exe', 'd:\\****\\****\\test\\demo\\index.js']</span></span><br></pre></td></tr></table></figure><p>其中返回了一个数组，第一个属性表示 <em>执行node所在的.exe文件</em> ，第二个属性表示 <em>当前执行的文件</em> 。</p><p>在实际场景中，我们可能会在命令行中输入其他需要传入的指令。</p><p>比如要启动一个server程序，我们就需要拟定一个端口号<code>--port 3000</code>。我们再使用上面的变量，输出的结果就会多出来 <code>--port</code> 和 <code>3000</code>。这样我们就可以对用户传递的参数进行解析，从而生成对应的功能。</p><p>（<em>我们也可以使用 *</em><span class="exturl" data-url="aHR0cHM6Ly93d3cubnBtanMuY29tL3BhY2thZ2UvY29tbWFuZGVy">commander<i class="fa fa-external-link-alt"></i></span>** 来解析我们想要的参数。后续文章中，我们也会使用此插件，开发一套cli脚手架。*）</p><h4 id="nextTick"><a href="#nextTick" class="headerlink" title="nextTick"></a>nextTick</h4><p>表示<strong>延迟加载</strong>，他和<code>setImmediate()</code>都属于延迟加载。但是setImmediate是<strong>将任务放到队列前面</strong>，而nextTick是<strong>将任务放到队列末尾</strong>。</p><p><em>下一篇文章我会细讲一下nextTick。</em></p><hr><blockquote><p>本篇文章由<strong>莫小尚</strong>创作，文章中如有任何问题和纰漏，欢迎您的指正与交流。<br>您也可以关注我的 <a href="https://mxshang.github.io">个人站点</a>、<span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vbW94aWFvc2hhbmcv">博客园<i class="fa fa-external-link-alt"></i></span> 和 <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vdXNlci8xNTkxNzQ4NTY3NzYyNzc2">掘金<i class="fa fa-external-link-alt"></i></span>，我会在文章产出后同步上传到这些平台上。<br>最后感谢您的支持！</p></blockquote>]]></content>
@@ -35,8 +48,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>JS基础</tag>
         <tag>Promise</tag>
+        <tag>JS基础</tag>
       </tags>
   </entry>
   <entry>
@@ -48,8 +61,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>JS基础</tag>
         <tag>Promise</tag>
+        <tag>JS基础</tag>
       </tags>
   </entry>
   <entry>
@@ -61,8 +74,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>JS基础</tag>
         <tag>Promise</tag>
+        <tag>JS基础</tag>
       </tags>
   </entry>
   <entry>
@@ -74,8 +87,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>JS基础</tag>
         <tag>Promise</tag>
+        <tag>JS基础</tag>
       </tags>
   </entry>
   <entry>
@@ -87,8 +100,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>JS基础</tag>
         <tag>Promise</tag>
+        <tag>JS基础</tag>
       </tags>
   </entry>
   <entry>
@@ -100,8 +113,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>ES6</tag>
         <tag>JS基础</tag>
+        <tag>ES6</tag>
       </tags>
   </entry>
   <entry>
@@ -113,8 +126,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>ES6</tag>
         <tag>JS基础</tag>
+        <tag>ES6</tag>
       </tags>
   </entry>
   <entry>
@@ -126,8 +139,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>ES6</tag>
         <tag>JS基础</tag>
+        <tag>ES6</tag>
       </tags>
   </entry>
   <entry>
@@ -139,8 +152,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>ES6</tag>
         <tag>JS基础</tag>
+        <tag>ES6</tag>
       </tags>
   </entry>
 </search>
