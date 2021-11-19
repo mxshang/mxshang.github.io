@@ -6,7 +6,7 @@
   <link href="https://mxshang.github.io/atom.xml" rel="self"/>
   
   <link href="https://mxshang.github.io/"/>
-  <updated>2021-11-17T17:36:16.778Z</updated>
+  <updated>2021-11-19T21:22:32.864Z</updated>
   <id>https://mxshang.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>学习笔记—Node中的模块调试</title>
+    <link href="https://mxshang.github.io/2021/11/19/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%9D%97%E8%B0%83%E8%AF%95/"/>
+    <id>https://mxshang.github.io/2021/11/19/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%9D%97%E8%B0%83%E8%AF%95/</id>
+    <published>2021-11-19T10:56:22.000Z</published>
+    <updated>2021-11-19T21:22:32.864Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>日常的学习笔记，包括 ES6、Promise、Node.js、Webpack、http 原理、Vue全家桶，后续可能还会继续更新 Typescript、Vue3 和 常见的面试题 等等。</p></blockquote><hr><h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><blockquote><p>参考文献 <span class="exturl" data-url="aHR0cHM6Ly9ub2RlanMub3JnL3poLWNuL2RvY3MvZ3VpZGVzL2RlYnVnZ2luZy1nZXR0aW5nLXN0YXJ0ZWQv">调试-入门指南 | Node.js 官网<i class="fa fa-external-link-alt"></i></span></p></blockquote><p>当我们在写代码时（尤其是手写插件源码），总会出现一些不可预料的问题。所以我们这个时候就需要去对代码进行调试。</p><p>在上一篇文章中，我们希望去实现 <code>require</code>，这个时候我们就需要通过调试功能，去理解一下 <code>require</code> 内部的运行机制到底是什么样的。</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 require 引入文件</span></span><br><span class="line"><span class="comment">// a.js</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">100</span>;</span><br><span class="line"><span class="built_in">module</span>.exports = a;</span><br><span class="line"><span class="comment">// b.js</span></span><br><span class="line"><span class="keyword">let</span> a = <span class="built_in">require</span>(<span class="string">'./a'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(a)</span><br></pre></td></tr></table></figure><p>下面我将会列举几种调试方式，并且使用其中一种来完成上一篇文章中遗留的问题。</p><h3 id="vscode调试"><a href="#vscode调试" class="headerlink" title="vscode调试"></a>vscode调试</h3><p>我们在使用 <em>Visual Studio Code</em> 编译器时，可以在右侧发现一个类似于瓢虫的标志。</p><p>点开后，我们可以创建一个 <code>launch.json</code> 的配置文件。</p><p><img data-src="pic5.png" alt="创建launch.json文件"></p><p>随后我们创建一个用来调试 <em>node.js</em> 的文件。</p><p>而我们就会得到下图中的配置文件，现在我们需要删除红框中的内容。</p><p><img data-src="pic6.png" alt="launch.json配置文件"></p><p>在文件 <em>b.js</em> 里面打一个断点，这样我们就可以进行调试了。</p><p><img data-src="pic7.png" alt="文件断点与调试"></p><p>点击 <em>单步调试</em> ，我们就可以看到源码了。</p><p><img data-src="pic8.png" alt="require源码"></p><p>这样我们就大概了解如何使用 <em>vscode</em> 进行代码调试了，后续我们可以通过这种方式加强我们对源码的学习。</p><h3 id="chrome调试"><a href="#chrome调试" class="headerlink" title="chrome调试"></a>chrome调试</h3><p>说起调试，我们就不得不说一下 浏览器调试。这里我们以 chrome谷歌浏览器为例。</p><p>首先，我们需要进行命令行配置。 输入 <code>node --inspect-brk</code>，在后面再加上我们需要调试的文件。</p><p>随后我们打开 chrome浏览器，输入链接 <code>chrome://inspect/#devices</code> ，这样就会进入浏览器的开发者工具界面。</p><p>我们就可以在页面中看到以下内容。<em>（此过程需要等待几秒到几分钟）</em></p><p><img data-src="pic9.png" alt="chrome开发者工具"></p><p>随后我们可以看见我们调试的文件。</p><p><img data-src="pic10.png" alt="调试工具"></p><p>操作使用上和vscode调试是相似的。</p><p>在下一篇文章中，我会使用这种调试方法去分析一下require的源码。</p><blockquote><p>本篇文章由<strong>莫小尚</strong>创作，文章中如有任何问题和纰漏，欢迎您的指正与交流。<br>您也可以关注我的 <a href="https://mxshang.github.io">个人站点</a>、<span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vbW94aWFvc2hhbmcv">博客园<i class="fa fa-external-link-alt"></i></span> 和 <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vdXNlci8xNTkxNzQ4NTY3NzYyNzc2">掘金<i class="fa fa-external-link-alt"></i></span>，我会在文章产出后同步上传到这些平台上。<br>最后感谢您的支持！</p></blockquote>]]></content>
+    
+    
+    <summary type="html">&lt;blockquote&gt;&lt;p&gt;日常的学习笔记，包括 ES6、Promise、Node.js、Webpack、http 原理、Vue全家桶，后续可能还会继续更新 Typescript、Vue3 和 常见的面试题 等等。&lt;/p&gt;&lt;/blockquote&gt;&lt;hr&gt;&lt;h2 id=&quot;调试&quot;&gt;&lt;a href=&quot;#调试&quot; class=&quot;headerlink&quot; title=&quot;调试&quot;&gt;&lt;/a&gt;调试&lt;/h2&gt;</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://mxshang.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="知识点汇总" scheme="https://mxshang.github.io/tags/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
+    
+    <category term="Node" scheme="https://mxshang.github.io/tags/Node/"/>
+    
+    <category term="JS进阶" scheme="https://mxshang.github.io/tags/JS%E8%BF%9B%E9%98%B6/"/>
+    
+  </entry>
   
   <entry>
     <title>学习笔记—Node的VM模块详解</title>
@@ -185,9 +210,9 @@
     
     <category term="知识点汇总" scheme="https://mxshang.github.io/tags/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
     
-    <category term="JS基础" scheme="https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/"/>
-    
     <category term="Promise" scheme="https://mxshang.github.io/tags/Promise/"/>
+    
+    <category term="JS基础" scheme="https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/"/>
     
   </entry>
   
@@ -210,9 +235,9 @@
     
     <category term="知识点汇总" scheme="https://mxshang.github.io/tags/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
     
-    <category term="JS基础" scheme="https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/"/>
-    
     <category term="Promise" scheme="https://mxshang.github.io/tags/Promise/"/>
+    
+    <category term="JS基础" scheme="https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/"/>
     
   </entry>
   
@@ -235,9 +260,9 @@
     
     <category term="知识点汇总" scheme="https://mxshang.github.io/tags/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
     
-    <category term="JS基础" scheme="https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/"/>
-    
     <category term="Promise" scheme="https://mxshang.github.io/tags/Promise/"/>
+    
+    <category term="JS基础" scheme="https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/"/>
     
   </entry>
   
@@ -260,9 +285,9 @@
     
     <category term="知识点汇总" scheme="https://mxshang.github.io/tags/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
     
-    <category term="JS基础" scheme="https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/"/>
-    
     <category term="Promise" scheme="https://mxshang.github.io/tags/Promise/"/>
+    
+    <category term="JS基础" scheme="https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/"/>
     
   </entry>
   
@@ -285,9 +310,9 @@
     
     <category term="知识点汇总" scheme="https://mxshang.github.io/tags/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
     
-    <category term="JS基础" scheme="https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/"/>
-    
     <category term="Promise" scheme="https://mxshang.github.io/tags/Promise/"/>
+    
+    <category term="JS基础" scheme="https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/"/>
     
   </entry>
   
@@ -310,9 +335,9 @@
     
     <category term="知识点汇总" scheme="https://mxshang.github.io/tags/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
     
-    <category term="ES6" scheme="https://mxshang.github.io/tags/ES6/"/>
-    
     <category term="JS基础" scheme="https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/"/>
+    
+    <category term="ES6" scheme="https://mxshang.github.io/tags/ES6/"/>
     
   </entry>
   
@@ -335,9 +360,9 @@
     
     <category term="知识点汇总" scheme="https://mxshang.github.io/tags/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
     
-    <category term="ES6" scheme="https://mxshang.github.io/tags/ES6/"/>
-    
     <category term="JS基础" scheme="https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/"/>
+    
+    <category term="ES6" scheme="https://mxshang.github.io/tags/ES6/"/>
     
   </entry>
   
@@ -360,9 +385,9 @@
     
     <category term="知识点汇总" scheme="https://mxshang.github.io/tags/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
     
-    <category term="ES6" scheme="https://mxshang.github.io/tags/ES6/"/>
-    
     <category term="JS基础" scheme="https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/"/>
+    
+    <category term="ES6" scheme="https://mxshang.github.io/tags/ES6/"/>
     
   </entry>
   
@@ -385,9 +410,9 @@
     
     <category term="知识点汇总" scheme="https://mxshang.github.io/tags/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
     
-    <category term="ES6" scheme="https://mxshang.github.io/tags/ES6/"/>
-    
     <category term="JS基础" scheme="https://mxshang.github.io/tags/JS%E5%9F%BA%E7%A1%80/"/>
+    
+    <category term="ES6" scheme="https://mxshang.github.io/tags/ES6/"/>
     
   </entry>
   

@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>学习笔记—Node中的模块调试</title>
+    <url>/2021/11/19/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%9D%97%E8%B0%83%E8%AF%95/</url>
+    <content><![CDATA[<blockquote><p>日常的学习笔记，包括 ES6、Promise、Node.js、Webpack、http 原理、Vue全家桶，后续可能还会继续更新 Typescript、Vue3 和 常见的面试题 等等。</p></blockquote><hr><h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><blockquote><p>参考文献 <span class="exturl" data-url="aHR0cHM6Ly9ub2RlanMub3JnL3poLWNuL2RvY3MvZ3VpZGVzL2RlYnVnZ2luZy1nZXR0aW5nLXN0YXJ0ZWQv">调试-入门指南 | Node.js 官网<i class="fa fa-external-link-alt"></i></span></p></blockquote><p>当我们在写代码时（尤其是手写插件源码），总会出现一些不可预料的问题。所以我们这个时候就需要去对代码进行调试。</p><p>在上一篇文章中，我们希望去实现 <code>require</code>，这个时候我们就需要通过调试功能，去理解一下 <code>require</code> 内部的运行机制到底是什么样的。</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 使用 require 引入文件</span></span><br><span class="line"><span class="comment">// a.js</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">100</span>;</span><br><span class="line"><span class="built_in">module</span>.exports = a;</span><br><span class="line"><span class="comment">// b.js</span></span><br><span class="line"><span class="keyword">let</span> a = <span class="built_in">require</span>(<span class="string">'./a'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(a)</span><br></pre></td></tr></table></figure><p>下面我将会列举几种调试方式，并且使用其中一种来完成上一篇文章中遗留的问题。</p><h3 id="vscode调试"><a href="#vscode调试" class="headerlink" title="vscode调试"></a>vscode调试</h3><p>我们在使用 <em>Visual Studio Code</em> 编译器时，可以在右侧发现一个类似于瓢虫的标志。</p><p>点开后，我们可以创建一个 <code>launch.json</code> 的配置文件。</p><p><img data-src="pic5.png" alt="创建launch.json文件"></p><p>随后我们创建一个用来调试 <em>node.js</em> 的文件。</p><p>而我们就会得到下图中的配置文件，现在我们需要删除红框中的内容。</p><p><img data-src="pic6.png" alt="launch.json配置文件"></p><p>在文件 <em>b.js</em> 里面打一个断点，这样我们就可以进行调试了。</p><p><img data-src="pic7.png" alt="文件断点与调试"></p><p>点击 <em>单步调试</em> ，我们就可以看到源码了。</p><p><img data-src="pic8.png" alt="require源码"></p><p>这样我们就大概了解如何使用 <em>vscode</em> 进行代码调试了，后续我们可以通过这种方式加强我们对源码的学习。</p><h3 id="chrome调试"><a href="#chrome调试" class="headerlink" title="chrome调试"></a>chrome调试</h3><p>说起调试，我们就不得不说一下 浏览器调试。这里我们以 chrome谷歌浏览器为例。</p><p>首先，我们需要进行命令行配置。 输入 <code>node --inspect-brk</code>，在后面再加上我们需要调试的文件。</p><p>随后我们打开 chrome浏览器，输入链接 <code>chrome://inspect/#devices</code> ，这样就会进入浏览器的开发者工具界面。</p><p>我们就可以在页面中看到以下内容。<em>（此过程需要等待几秒到几分钟）</em></p><p><img data-src="pic9.png" alt="chrome开发者工具"></p><p>随后我们可以看见我们调试的文件。</p><p><img data-src="pic10.png" alt="调试工具"></p><p>操作使用上和vscode调试是相似的。</p><p>在下一篇文章中，我会使用这种调试方法去分析一下require的源码。</p><blockquote><p>本篇文章由<strong>莫小尚</strong>创作，文章中如有任何问题和纰漏，欢迎您的指正与交流。<br>您也可以关注我的 <a href="https://mxshang.github.io">个人站点</a>、<span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vbW94aWFvc2hhbmcv">博客园<i class="fa fa-external-link-alt"></i></span> 和 <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vdXNlci8xNTkxNzQ4NTY3NzYyNzc2">掘金<i class="fa fa-external-link-alt"></i></span>，我会在文章产出后同步上传到这些平台上。<br>最后感谢您的支持！</p></blockquote>]]></content>
+      <categories>
+        <category>学习笔记</category>
+      </categories>
+      <tags>
+        <tag>知识点汇总</tag>
+        <tag>Node</tag>
+        <tag>JS进阶</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>学习笔记—Node的VM模块详解</title>
     <url>/2021/11/17/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%ADVM%E6%A8%A1%E5%9D%97%E8%AF%A6%E8%A7%A3/</url>
     <content><![CDATA[<blockquote><p>日常的学习笔记，包括 ES6、Promise、Node.js、Webpack、http 原理、Vue全家桶，后续可能还会继续更新 Typescript、Vue3 和 常见的面试题 等等。</p></blockquote><hr><blockquote><p>参考文献 <span class="exturl" data-url="aHR0cDovL25vZGVqcy5jbi9hcGkvdm0uaHRtbA==">vm 虚拟机 | Node 官网<i class="fa fa-external-link-alt"></i></span></p></blockquote><p>在上一篇文章中，我们提到了一个问题。</p><p><em>字符串如何能变成 JS 执行呢？</em></p><p>我们详细介绍了两种方法，分别是 <a href="https://mxshang.github.io/2021/11/16/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97/">eval函数</a> 和 <a href="https://mxshang.github.io/2021/11/16/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97/">new Function</a> 。</p><p>在这里我们需要再强调一下， 由 <code>Function</code> 构造器创建的函数不会创建当前环境的闭包，它们总是被创建于全局环境，因此在运行时它们只能访问全局变量和自己的局部变量，不能访问它们被 <code>Function</code> 构造器创建时所在的作用域的变量。这一点与使用 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/eval" target="_blank" rel="noopener"><code>eval</code></a> 执行创建函数的代码不同。</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">global.a = <span class="number">100</span>; <span class="comment">// 挂在到全局对象global上</span></span><br><span class="line"><span class="keyword">var</span> b = <span class="number">200</span>; <span class="comment">// this !== global</span></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">"console.log(a)"</span>)() <span class="comment">// 100</span></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">"console.log(b)"</span>)() <span class="comment">// b is not defined</span></span><br></pre></td></tr></table></figure><p><code>Function</code> 可以获取全局变量，所以他还是可能会有变量污染的情况出现。<code>Function</code> 是 <em>模块引擎的实现原理</em> ，后续我会出一篇文章进行单独讲解。</p><p>还有一种解决方案，我们在上一次文章中没有进行详细的展开，那就是 <strong><code>vm</code>模块</strong> 。</p><h2 id="vm模块"><a href="#vm模块" class="headerlink" title="vm模块"></a>vm模块</h2><p>在上述文字中，我一直在强调一个概念，那就是 <strong>变量的污染</strong>。</p><p>VM的特点就是不受环境的影响，也可以说他就是一个 <strong>沙箱环境</strong> <em>（沙箱模式给模块提供一个环境运行而不影响其它模块和它们私有的沙箱）</em>。</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> vm = <span class="built_in">require</span>(<span class="string">'vm'</span>)</span><br><span class="line">global.a = <span class="number">100</span>;</span><br><span class="line"><span class="comment">// 运行在当前环境中[当前作用域]</span></span><br><span class="line">vm.runInThisContext(<span class="string">'console.log(a)'</span>); <span class="comment">// 100</span></span><br><span class="line"><span class="comment">// 运行在新的环境中[其他作用域]</span></span><br><span class="line">vm.runInNewContext(<span class="string">'console.log(a)'</span>); <span class="comment">// a is not defined</span></span><br></pre></td></tr></table></figure><p>在这里我们要强调一下，因为 <strong>在Node中全局变量是在多个模块下共享的，所以尽量不要在global中定义属性。</strong> Demo中的定义是为了方便理解。</p><p>假设我们在同级目录下有一个文件 <em>1.js</em> ，里面定义了 <code>global.a = 100;</code>。 现在我们引入这个文件</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">requrie(./<span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">// 100</span></span><br></pre></td></tr></table></figure><p>我们可以发现，在当前文件中我们并没有定义变量a，仅仅只是把两个模块文件关联在了一起。这就是我上面提到的，<strong>Node中全局变量是在多个模块下共享的。</strong></p><p>他的原理是因为在 <em>Node</em> 的环境中，全局中有一个执行上下文。</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 模拟一下Node的全局环境</span></span><br><span class="line"><span class="comment">// vm.runInThisContext在当前全局环境执行，但不会产生新函数</span></span><br><span class="line">- <span class="function"><span class="keyword">function</span>(<span class="params">exports, module, require, __dirname, __filename</span>)</span>&#123; <span class="comment">// ... &#125;</span></span><br><span class="line">- vm.runInThisContext ...</span><br><span class="line"><span class="comment">// vm.runInNewContext在全局环境之外执行</span></span><br><span class="line">vm.runInNewContext ...</span><br></pre></td></tr></table></figure><p>所以，<code>vm.runInThisContext</code> 可以访问到 <code>global</code>上的全局变量，但是访问不到自定义的变量。而 <code>vm.runInNewContext</code> 访问不到 <code>global</code>，也访问不到自定义变量，他存在于一个全新的执行上下文。</p><p>而我们<code>require</code> 就是通过 <code>vm.runInThisContext</code> 实现的。</p><p>实现<code>require</code> 主要可以分为以下四步。</p><ol><li>读取需要引入的文件。</li><li>读取到文件后，将代码封装成一个函数。</li><li>通过 <code>vm.runInThisContext</code> 将他转变成 JS 语法。</li><li>代码调用。</li></ol><p>假设我们现在有以下两个文件。分别是 <em>a.js</em> 和 <em>b.js</em></p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 文件a通过module.exports导出一个变量，在文件b中使用require进行接收。</span></span><br><span class="line"><span class="comment">// a.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="string">"a"</span></span><br><span class="line"><span class="comment">// b.js</span></span><br><span class="line"><span class="keyword">let</span> a = <span class="built_in">require</span>(<span class="string">'./a'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">// a</span></span><br></pre></td></tr></table></figure><p>我们可以通过上面的四个步骤，分析一下导入导出的实现逻辑是什么样的。</p><ol><li><p><em>读取文件。</em></p><p>将需要引入的文件内容引入到需要接收的文件里，就会变成这个样子</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="built_in">module</span>.exports = <span class="string">"a"</span>;</span><br></pre></td></tr></table></figure><p>但是这种形式，Node根本解析不了，所以我们就需要进行第二步。</p></li><li><p><em>将读取的文件封装成函数。</em></p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = (<span class="function"><span class="keyword">function</span>(<span class="params">exports, module, require, __dirname, __filename</span>)</span>&#123;</span><br><span class="line">  <span class="built_in">module</span>.exports = <span class="string">"a"</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">module</span>.exports</span><br><span class="line">&#125;)(...args) <span class="comment">// exports, module, require, __dirname, __filename 将五个参数传入</span></span><br></pre></td></tr></table></figure><p>封装成函数的原因，我们可以参考下面这个例子。</p><p>假设我们现在传入的不是字符串，而是一个函数。</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// a.js</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">100</span>;</span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br></pre></td></tr></table></figure><p>这样我们在解析的时候，就会被解析成下面这种格式</p><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = (<span class="function"><span class="keyword">function</span>(<span class="params">exports, module, require, __dirname, __filename</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="number">100</span>;</span><br><span class="line">  <span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">module</span>.exports</span><br><span class="line">&#125;)(...args) <span class="comment">// exports, module, require, __dirname, __filename 将五个参数传入</span></span><br></pre></td></tr></table></figure><p>我们导出的是 <code>module.exports</code>，所以在模块文件中定义的变量a，也只属于当前这个执行上下文。</p><p>在解析的时候，变量a 会被放到函数中。真正的实现了 <strong>作用域分离</strong>。</p></li><li><p><em><code>vm.runInThisContext</code> 解析成可执行的Js代码</em></p><p>我们处理过的代码会以字符串的形式存在，所以我们需要通过<code>vm.runInThisContext</code>将字符串进行解析。</p></li><li><p><em>进行代码调用</em></p><p>在此之前，我们其实还需要对代码进行调试。</p></li></ol><p>下一篇文章我会详细讲解一下 <strong>Node中的模块调试</strong>。</p><blockquote><p>本篇文章由<strong>莫小尚</strong>创作，文章中如有任何问题和纰漏，欢迎您的指正与交流。<br>您也可以关注我的 <a href="https://mxshang.github.io">个人站点</a>、<span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vbW94aWFvc2hhbmcv">博客园<i class="fa fa-external-link-alt"></i></span> 和 <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vdXNlci8xNTkxNzQ4NTY3NzYyNzc2">掘金<i class="fa fa-external-link-alt"></i></span>，我会在文章产出后同步上传到这些平台上。<br>最后感谢您的支持！</p></blockquote>]]></content>
@@ -87,8 +100,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>JS基础</tag>
         <tag>Promise</tag>
+        <tag>JS基础</tag>
       </tags>
   </entry>
   <entry>
@@ -100,8 +113,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>JS基础</tag>
         <tag>Promise</tag>
+        <tag>JS基础</tag>
       </tags>
   </entry>
   <entry>
@@ -113,8 +126,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>JS基础</tag>
         <tag>Promise</tag>
+        <tag>JS基础</tag>
       </tags>
   </entry>
   <entry>
@@ -126,8 +139,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>JS基础</tag>
         <tag>Promise</tag>
+        <tag>JS基础</tag>
       </tags>
   </entry>
   <entry>
@@ -139,8 +152,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>JS基础</tag>
         <tag>Promise</tag>
+        <tag>JS基础</tag>
       </tags>
   </entry>
   <entry>
@@ -152,8 +165,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>ES6</tag>
         <tag>JS基础</tag>
+        <tag>ES6</tag>
       </tags>
   </entry>
   <entry>
@@ -165,8 +178,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>ES6</tag>
         <tag>JS基础</tag>
+        <tag>ES6</tag>
       </tags>
   </entry>
   <entry>
@@ -178,8 +191,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>ES6</tag>
         <tag>JS基础</tag>
+        <tag>ES6</tag>
       </tags>
   </entry>
   <entry>
@@ -191,8 +204,8 @@
       </categories>
       <tags>
         <tag>知识点汇总</tag>
-        <tag>ES6</tag>
         <tag>JS基础</tag>
+        <tag>ES6</tag>
       </tags>
   </entry>
 </search>
