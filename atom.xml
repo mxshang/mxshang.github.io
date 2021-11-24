@@ -6,7 +6,7 @@
   <link href="https://mxshang.github.io/atom.xml" rel="self"/>
   
   <link href="https://mxshang.github.io/"/>
-  <updated>2021-11-21T15:55:35.285Z</updated>
+  <updated>2021-11-24T00:29:00.527Z</updated>
   <id>https://mxshang.github.io/</id>
   
   <author>
@@ -17,9 +17,59 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>学习笔记—Node中第三方模块</title>
+    <link href="https://mxshang.github.io/2021/11/23/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E7%AC%AC%E4%B8%89%E6%96%B9%E6%A8%A1%E5%9D%97/"/>
+    <id>https://mxshang.github.io/2021/11/23/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E7%AC%AC%E4%B8%89%E6%96%B9%E6%A8%A1%E5%9D%97/</id>
+    <published>2021-11-23T11:42:22.000Z</published>
+    <updated>2021-11-24T00:29:00.527Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>日常的学习笔记，包括 ES6、Promise、Node.js、Webpack、http 原理、Vue全家桶，后续可能还会继续更新 Typescript、Vue3 和 常见的面试题 等等。</p></blockquote><hr><h2 id="第三方模块"><a href="#第三方模块" class="headerlink" title="第三方模块"></a>第三方模块</h2><p>第三方模块的引用也是 <em>没有绝对路径</em> 的。</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> r = <span class="built_in">require</span>(<span class="string">'co'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(r);</span><br></pre></td></tr></table></figure><p>第三方模块的 <strong>引用形式主要分为两种</strong>：</p><ul><li><p><strong>全局模块</strong>，直接<strong>安装到电脑的npm目录下</strong>。</p></li><li><p><strong>内置的第三方模块</strong>，默认会沿着 <strong>当前目录向上查找 <code>node_modules</code> 下的同名文件夹，先根据 <code>package.json</code> 中的 <code>main</code> 设定的文件查找。如不存在，再到 <code>index.js</code> 中查找</strong>。如果自己的目录下未找到 <code>node_modules</code>，则会向上查找。<em>（可以通过打印 <code>module.paths</code> 进行路径查找）</em></p><p>假设我们在当前目录下，新建一个 <code>node_modules</code> ，在里面自定义一个文件夹名为 <code>co</code>，文件夹内包含一个 <code>index.js</code> 文件。文件里面写上内容 <code>module.exports = &quot;hello&quot;</code>。</p><p>这时我们再重新打印，发现上面的结果变成了 <code>hello</code>。</p><p>原因就是因为 <strong>第三方模块的查找规则</strong>。</p></li></ul><h2 id="npm"><a href="#npm" class="headerlink" title="npm"></a>npm</h2><blockquote><p>参考文献 <span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm5wbWpzLmNvbS8=">npm Docs<i class="fa fa-external-link-alt"></i></span> / <span class="exturl" data-url="aHR0cHM6Ly93d3cubnBtanMuY29tLw==">npm<i class="fa fa-external-link-alt"></i></span></p></blockquote><p>作为前端工程师，应该对<code>npm</code>并不陌生。（ <em>现在不建议使用 <code>cnpm</code> ，无法锁定版本，可能会出现很多奇怪的问题。目前推荐使用 <code>nrm</code> 或 <code>yarn</code></em> ）</p><p>这里我们介绍一下 ” <em>3n模块</em> “</p><ul><li><code>npm</code> 全称 <code>node package manager</code> ，是nodejs的包管理器 ，用于node插件管理，包括安装、卸载、管理依赖等。</li><li><code>nrm</code> 全称 <code>node registry manager</code> ，是npm的镜像源管理工具，有时候国外资源太慢，使用这个就可以快速地在 npm 源间切换。<em>（例：<code>nrm use taobao</code> 、 <code>nrm use cnpm</code> 等…）</em></li><li><code>nvm</code> 全称 <code>node version manager</code> ，是一个nodejs的版本管理工具，通过它可以安装和切换不同版本的 node 和 npm。</li></ul><p>使用npm安装的模块就是 <strong>全局模块</strong>，这种模块无法被 <code>require</code> 引用，<strong>只能通过命令行使用</strong>。</p><p><img data-src="pic11.png" alt="npm root -g"></p><p>我们之所以可以在 <em>cmd控制台</em> 直接访问npm或node，是因为在环境变量的Path属性上进行了配置。</p><p>而我们通过 npm安装的 <strong>全局模块</strong> ，会 <em>在npm目录下生成一个快捷方式</em> ，所以我们可以通过命令行使用全局模块。</p><h3 id="配置命令行命令"><a href="#配置命令行命令" class="headerlink" title="配置命令行命令"></a>配置命令行命令</h3><p>假设我们现在有一个需要在命令行中输出的文件。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; .&#x2F;bin&#x2F;www</span><br><span class="line">console.log(&#39;a&#39;)</span><br></pre></td></tr></table></figure><p>我们该如何进行配置呢？</p><p>首先通过命令行 <code>npm init -y</code> 生成默认的配置文件。</p><p><img data-src="pic12.png" alt="package.json"></p><p>在文件中添加属性 <code>bin</code> ，并在 <code>bin</code> 中添加相应的文件路径。<em>（我们也可以自定义一个命令，进行简便操作）</em></p><p><img data-src="pic13.png" alt="package.json"></p><p>我们将配置文件配置好后，需要放置到全局环境下。 这时有两种方式可以进行操作：</p><ul><li>发布到全局模块环境，并进行发布。</li><li>使用 <code>npm link</code> ，将我们当前文件link到 <em>node_module</em> 文件夹下。<em>（当前推荐使用这种，方便调试）</em></li></ul><p>这时我们可以看到，当前自定义命令 <code>&quot;gm&quot;</code> 已经映射到了我们当前的文件目录。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 控制台打印</span><br><span class="line">C:\Users\XXX\AppData\Roaming\npm\gm -&gt; C:\Users\XXX\AppData\Roaming\npm\node_modules\global-modules\bin\www</span><br><span class="line">C:\Users\XXX\AppData\Roaming\npm\node_modules\global-modules -&gt; D:\xxxx\xxxx\xxxx\xxx\xxx\global-modules</span><br></pre></td></tr></table></figure><p>但是我们现在还无法直接使用 <code>&quot;gm&quot;</code> 命令，我们还需要配置一个运行方式。</p><p>在我们之前创建好的文件最开头，输入 <code>#! /usr/bin/env node</code></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#! &#x2F;usr&#x2F;bin&#x2F;env node</span><br><span class="line">console.log(&#39;a&#39;)</span><br></pre></td></tr></table></figure><p>这行代码的意思就是告诉我们的命令行，当前文件是用当前环境变量里面node运行的。</p><p>修改了运行方式，我们需要重新运行 <code>npm link --force</code> 。<em>（<code>--force</code> 覆盖之前的配置文件）</em></p><p>这样我们就可以在命令行中输出我们配置文件中的内容了。</p><p><img data-src="pic14.png" alt="控制台输出"></p><p>我们可以通过这种方式，实现一些自定义的全局包，就可以采用这种方式进行配置。</p><p><strong>总结一下</strong>：</p><ol><li>先生成默认的配置文件。</li><li>配置 <code>bin</code> 命令。</li><li>在指定文件下添加执行方式 <code>#! /usr/bin/env node</code>。</li><li>将此包放到npm下，可以发布到全局环境，也可以使用 <code>npm link</code> 进行临时调试。</li></ol>]]></content>
+    
+    
+    <summary type="html">&lt;blockquote&gt;&lt;p&gt;日常的学习笔记，包括 ES6、Promise、Node.js、Webpack、http 原理、Vue全家桶，后续可能还会继续更新 Typescript、Vue3 和 常见的面试题 等等。&lt;/p&gt;&lt;/blockquote&gt;&lt;hr&gt;&lt;h2 id=&quot;第三方模块&quot;&gt;&lt;a href=&quot;#第三方模块&quot; class=&quot;headerlink&quot; title=&quot;第三方模块&quot;&gt;&lt;/a&gt;第三方模块&lt;/h2&gt;</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://mxshang.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="知识点汇总" scheme="https://mxshang.github.io/tags/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
+    
+    <category term="Node" scheme="https://mxshang.github.io/tags/Node/"/>
+    
+    <category term="JS进阶" scheme="https://mxshang.github.io/tags/JS%E8%BF%9B%E9%98%B6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>学习笔记—Node中模块查找规范</title>
+    <link href="https://mxshang.github.io/2021/11/22/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9F%A5%E6%89%BE%E8%A7%84%E8%8C%83/"/>
+    <id>https://mxshang.github.io/2021/11/22/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9F%A5%E6%89%BE%E8%A7%84%E8%8C%83/</id>
+    <published>2021-11-22T11:42:22.000Z</published>
+    <updated>2021-11-24T00:26:32.690Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>日常的学习笔记，包括 ES6、Promise、Node.js、Webpack、http 原理、Vue全家桶，后续可能还会继续更新 Typescript、Vue3 和 常见的面试题 等等。</p></blockquote><hr><p>在学习其他模块之前，我们先要清楚 <em>文件模块中的查找规范</em> 。</p><h2 id="模块查找规范"><a href="#模块查找规范" class="headerlink" title="模块查找规范"></a>模块查找规范</h2><p>引用自定义模块时，会自动查找目标目录下的 <em>index.js文件</em> 。</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /jQuery/index.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="string">"jquery"</span></span><br><span class="line"><span class="comment">// /main.js</span></span><br><span class="line"><span class="keyword">const</span> jQuery = <span class="built_in">require</span>(<span class="string">'./jQuery'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(jQuery); <span class="comment">// jquery</span></span><br></pre></td></tr></table></figure><p>但是如果我们不去定义 <em>index.js</em>，则会出现无法查找文件的问题，也就是报错。</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /jQuery/a.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="string">"jquery"</span></span><br><span class="line"><span class="comment">// /main.js</span></span><br><span class="line"><span class="keyword">const</span> jQuery = <span class="built_in">require</span>(<span class="string">'./jQuery'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(jQuery); <span class="comment">// Cannot find module './jQuery'</span></span><br></pre></td></tr></table></figure><p>这样我们就需要一个描述文件 <code>package.json</code> ，在文件中有一个 <code>main</code> 属性，可以定义文件入口。</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /jQuery/package.json</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"main"</span>:<span class="string">"./jQuery/a.js"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>这样我们再重新打印，发现结果被成功打印了出来。</p><p>所以我们可以总结一下文件模块的 <strong>查找规范</strong>：</p><ul><li>在 <strong>最新的node版本</strong>中，默认 <em>先查找同名文件</em> 。如果没找到，则尝试添加查找 <em>.js和.json文件</em> 。如果还是没有，会查找 <em>同名文件夹（当成了一个包）</em>，找到后，会先找 <em>package.json</em>文件。如果没有，则会继续查找 <em>index.js文件</em>。如果依旧不存在，则会报错。</li><li>在 <strong>老版本的node中</strong>， 如果 <em>有package.json</em> 的情况下，会<em>先找同名包</em>。如果 <em>没有package.json</em>，会去 <em>查找同名文件</em>。</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 新版node查找流程</span><br><span class="line">│</span><br><span class="line">└───┤ 同名文件</span><br><span class="line"> │</span><br><span class="line"> │──┤ 同名.js &#x2F; 同名.json</span><br><span class="line"> │</span><br><span class="line"> │──┤ 同名文件夹</span><br><span class="line">    │</span><br><span class="line">    │───┤ pageage.json</span><br><span class="line">    │</span><br><span class="line">    └───┤ index.js</span><br><span class="line">   </span><br><span class="line"> 都没找到，则抛出一个错误。</span><br></pre></td></tr></table></figure><p>这就是node的自定义模块查找规范，我们在平时面试的时候可能会遇到这种问题。</p><p>比如介绍一下 <em>node的模块查找机制<em>，我们就可以用这种方式去介绍。</em>（目前一般很少有问老版本node的查找机制，一般都会问两种查找机制的区别，感兴趣的可以去查阅相关资料。）</em></p><blockquote><p>本篇文章由<strong>莫小尚</strong>创作，文章中如有任何问题和纰漏，欢迎您的指正与交流。<br>您也可以关注我的 <a href="https://mxshang.github.io">个人站点</a>、<span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vbW94aWFvc2hhbmcv">博客园<i class="fa fa-external-link-alt"></i></span> 和 <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vdXNlci8xNTkxNzQ4NTY3NzYyNzc2">掘金<i class="fa fa-external-link-alt"></i></span>，我会在文章产出后同步上传到这些平台上。<br>最后感谢您的支持！</p></blockquote>]]></content>
+    
+    
+    <summary type="html">&lt;blockquote&gt;&lt;p&gt;日常的学习笔记，包括 ES6、Promise、Node.js、Webpack、http 原理、Vue全家桶，后续可能还会继续更新 Typescript、Vue3 和 常见的面试题 等等。&lt;/p&gt;&lt;/blockquote&gt;&lt;hr&gt;&lt;p&gt;在学习其他模块之前，我们先要清楚 &lt;em&gt;文件模块中的查找规范&lt;/em&gt; 。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://mxshang.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="知识点汇总" scheme="https://mxshang.github.io/tags/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
+    
+    <category term="Node" scheme="https://mxshang.github.io/tags/Node/"/>
+    
+    <category term="JS进阶" scheme="https://mxshang.github.io/tags/JS%E8%BF%9B%E9%98%B6/"/>
+    
+  </entry>
+  
+  <entry>
     <title>学习笔记—Node中关于require的补充</title>
-    <link href="https://mxshang.github.io/2021/11/21/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E5%85%B3%E4%BA%8Erequire%E7%9A%84%E8%A1%A5%E5%85%85/"/>
-    <id>https://mxshang.github.io/2021/11/21/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E5%85%B3%E4%BA%8Erequire%E7%9A%84%E8%A1%A5%E5%85%85/</id>
+    <link href="https://mxshang.github.io/2021/11/21/Node-%E4%B8%AD/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E5%85%B3%E4%BA%8Erequire%E7%9A%84%E8%A1%A5%E5%85%85/"/>
+    <id>https://mxshang.github.io/2021/11/21/Node-%E4%B8%AD/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E5%85%B3%E4%BA%8Erequire%E7%9A%84%E8%A1%A5%E5%85%85/</id>
     <published>2021-11-21T11:42:22.000Z</published>
     <updated>2021-11-21T15:55:35.285Z</updated>
     
@@ -43,8 +93,8 @@
   
   <entry>
     <title>学习笔记—Node中require的实现</title>
-    <link href="https://mxshang.github.io/2021/11/20/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%ADrequire%E7%9A%84%E5%AE%9E%E7%8E%B0/"/>
-    <id>https://mxshang.github.io/2021/11/20/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%ADrequire%E7%9A%84%E5%AE%9E%E7%8E%B0/</id>
+    <link href="https://mxshang.github.io/2021/11/20/Node-%E4%B8%AD/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%ADrequire%E7%9A%84%E5%AE%9E%E7%8E%B0/"/>
+    <id>https://mxshang.github.io/2021/11/20/Node-%E4%B8%AD/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%ADrequire%E7%9A%84%E5%AE%9E%E7%8E%B0/</id>
     <published>2021-11-20T10:42:22.000Z</published>
     <updated>2021-11-21T10:54:08.044Z</updated>
     
@@ -68,8 +118,8 @@
   
   <entry>
     <title>学习笔记—Node中的模块调试</title>
-    <link href="https://mxshang.github.io/2021/11/19/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%9D%97%E8%B0%83%E8%AF%95/"/>
-    <id>https://mxshang.github.io/2021/11/19/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%9D%97%E8%B0%83%E8%AF%95/</id>
+    <link href="https://mxshang.github.io/2021/11/19/Node-%E4%B8%AD/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%9D%97%E8%B0%83%E8%AF%95/"/>
+    <id>https://mxshang.github.io/2021/11/19/Node-%E4%B8%AD/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%9D%97%E8%B0%83%E8%AF%95/</id>
     <published>2021-11-19T10:56:22.000Z</published>
     <updated>2021-11-19T21:22:32.864Z</updated>
     
@@ -93,8 +143,8 @@
   
   <entry>
     <title>学习笔记—Node的VM模块详解</title>
-    <link href="https://mxshang.github.io/2021/11/17/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%ADVM%E6%A8%A1%E5%9D%97%E8%AF%A6%E8%A7%A3/"/>
-    <id>https://mxshang.github.io/2021/11/17/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%ADVM%E6%A8%A1%E5%9D%97%E8%AF%A6%E8%A7%A3/</id>
+    <link href="https://mxshang.github.io/2021/11/17/Node-%E4%B8%AD/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%ADVM%E6%A8%A1%E5%9D%97%E8%AF%A6%E8%A7%A3/"/>
+    <id>https://mxshang.github.io/2021/11/17/Node-%E4%B8%AD/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E4%B8%ADVM%E6%A8%A1%E5%9D%97%E8%AF%A6%E8%A7%A3/</id>
     <published>2021-11-17T03:56:22.000Z</published>
     <updated>2021-11-17T17:36:16.778Z</updated>
     
@@ -118,8 +168,8 @@
   
   <entry>
     <title>学习笔记—Node的核心模块</title>
-    <link href="https://mxshang.github.io/2021/11/16/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97/"/>
-    <id>https://mxshang.github.io/2021/11/16/Node-%E4%B8%8B/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97/</id>
+    <link href="https://mxshang.github.io/2021/11/16/Node-%E4%B8%AD/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97/"/>
+    <id>https://mxshang.github.io/2021/11/16/Node-%E4%B8%AD/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94Node%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97/</id>
     <published>2021-11-16T02:56:22.000Z</published>
     <updated>2021-11-16T13:05:15.574Z</updated>
     
