@@ -240,7 +240,7 @@ video {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  max-width: 100%;
+  max-width: 80%;
 }
 hr {
   background-image: repeating-linear-gradient(-45deg, #ddd, #ddd 4px, transparent 4px, transparent 8px);
@@ -1341,7 +1341,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ffe0ff;
+  background: #ff40d4;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
